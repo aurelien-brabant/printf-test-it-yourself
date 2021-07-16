@@ -25,6 +25,8 @@ What you need to make a running program is simply compiling your executable with
 `gcc main.c ptys.c` is all you need. Of course, you need to have your `ft_printf` function compiled or linked with these files, otherwise
 it will obivously not work.
 
+For example, you can compile the test main at `examples/example1.c` like that: `gcc -I. examples/example1.c ptys.c`. The `-I.` is required to make `example1.c` know how the `ptys.h` header can be found (that is, at the root of the repo).
+
 ### Coding a simple test suite
 
 Let's demonstrate quickly how to write tests using `PTYS`.
