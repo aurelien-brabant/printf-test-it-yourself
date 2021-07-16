@@ -1,7 +1,7 @@
 #ifndef PRINTF_TYS
 # define PRINTF_TYS
-# include <stddef.h>
 # include <stdbool.h>
+# include <stdio.h>
 
 # define LOG_DIR "./logs"
 
