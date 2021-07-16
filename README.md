@@ -37,7 +37,7 @@ to execute properly.
 - The `ptys_terminate()` function must be called when all the tests have been done. It does some cleanup and prints a clean summary of
 the test suite.
 
-- The `ASSERT` macro is what actually allow you to test your `ft_printf`. You simply need to pass it a test name (make it explicit, that's better)
+- The `ASSERT` macro is what actually allow you to test your `ft_printf`. You simply need to pass it a test name (make it explicit, that's better, it will be displayed in the output)
 and as a second "argument", you simply have to make your printf call (without the `ft` prefix). `PTYS` will handle that by itself and will
 execute the real printf and your printf, comparing their input and return values to determine if you're correct.
 
