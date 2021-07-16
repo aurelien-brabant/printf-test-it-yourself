@@ -11,6 +11,8 @@ static int	save_out_fd = -1;
 
 static void default_assert_callback(char *test_name, char *expected_fp, char *actual_fp, int diff_ret, int ref_ret, int actual_ret)
 {
+	(void)expected_fp;
+	(void)actual_fp;
 	if (diff_ret != 0) {
 		printf("%-30s[\033[1;31mKO\033[0m] output differs. Diff can be found at %s/diff/%s.diff\n",
 			test_name, LOG_DIR, test_name);
@@ -67,6 +69,7 @@ void	assert_by_diff(char *test_name, char *expected_fp, char *actual_fp, int ref
 	// run diff command
 
 	int diff_ret = system(cmd);
+	free(cmd);
 	framework.assert_callback(test_name, expected_fp, actual_fp, diff_ret, ref_ret, actual_ret);
 }
 
