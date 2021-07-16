@@ -30,6 +30,8 @@ struct framework
 
 extern struct framework framework;
 
+int		ft_printf(const char *fmt, ...);
+
 void	assert_by_diff(char *test_name, char *expected_fp, char *actual_fp, int ref_ret, int actual_ret);
 bool	output_redirect(const char *filepath);
 bool	output_restore(void);
