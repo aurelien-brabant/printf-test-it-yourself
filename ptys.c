@@ -4,6 +4,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <signal.h>
+#include <limits.h>
 
 #include "ptys.h"
 
@@ -54,40 +56,21 @@ void	ptys_terminate(void)
 
 void	assert_by_diff(char *test_name, char *expected_fp, char *actual_fp, int ref_ret, int actual_ret)
 {
-	char	*cmd = NULL;
-	size_t	cmd_size;
+	char	cmd[PATH_MAX] = { 0 };
 
-	cmd_size = (strlen(expected_fp) + strlen(actual_fp) + strlen(test_name) + strlen(LOG_DIR) + 24) * sizeof (char);
-	cmd = malloc(cmd_size);
-	if (cmd == NULL) {
-		perror("malloc: ");
-		return ;
-	}
-	memset(cmd, 0, cmd_size);
-	snprintf(cmd, cmd_size, "diff -u %s %s > %s/diff/%s.diff", expected_fp, actual_fp, LOG_DIR, test_name);
+	snprintf(cmd, PATH_MAX, "diff -u %s %s &> %s/diff/%s.diff", expected_fp, actual_fp, LOG_DIR, test_name);
 
 	// run diff command
 
 	int diff_ret = system(cmd);
-	free(cmd);
 	framework.assert_callback(test_name, expected_fp, actual_fp, diff_ret, ref_ret, actual_ret);
 }
 
 bool	output_redirect(const char *filepath)
 {
-	int fd = -1;
-
-	fd = open(filepath, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd == -1) {
-		perror("open: ");
-		return (false);
-	}
-	save_out_fd = dup(STDOUT_FILENO);
-	if (dup2(fd, STDOUT_FILENO) == -1) {
-		perror("dup2: ");
-		close(fd);
-		close(save_out_fd);
-		return (false);
+	save_out_fd = dup(fileno(stdout));
+	if (!freopen(filepath, "w", stdout)) {
+		perror("freopen: ");
 	}
 	return (true);
 }
@@ -98,9 +81,6 @@ bool	output_restore(void)
 		perror("fflush stdout: ");
 		return (false);
 	}
-	if (dup2(save_out_fd, STDOUT_FILENO) == -1) {
-		perror("dup2: ");
-		return (false);
-	}
+	dup2(save_out_fd, fileno(stdout));
 	return (true);
 }
