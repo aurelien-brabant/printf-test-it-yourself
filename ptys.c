@@ -75,6 +75,7 @@ bool	output_redirect(const char *filepath)
 		return (false);
 	}
 	save_out_fd = dup(fileno(stdout));
+	fflush(stdout);
 	dup2(fd, fileno(stdout));
 	return (true);
 }
