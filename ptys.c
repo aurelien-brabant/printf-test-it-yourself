@@ -68,10 +68,14 @@ void	assert_by_diff(char *test_name, char *expected_fp, char *actual_fp, int ref
 
 bool	output_redirect(const char *filepath)
 {
-	save_out_fd = dup(fileno(stdout));
-	if (!freopen(filepath, "w", stdout)) {
-		perror("freopen: ");
+	int	fd = open(filepath, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+
+	if (fd == -1) {
+		perror("open: ");
+		return (false);
 	}
+	save_out_fd = dup(fileno(stdout));
+	dup2(fd, fileno(stdout));
 	return (true);
 }
 
